@@ -4,8 +4,8 @@
 ;; Homepage: https://gitlab.com/andreyorst/isayt
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: indent lisp tools
-;; Prefix: aggressive-indent
-;; Version: 0.0.2
+;; Prefix: isayt
+;; Version: 0.0.3
 ;;
 ;; This program is free software: you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
