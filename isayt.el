@@ -1,10 +1,11 @@
-;;; isayt.el --- automatically indent lisp expressions while typing -*- lexical-binding: t; -*-
+;;; isayt.el --- Automatically indent lisp expressions while typing -*- lexical-binding: t -*-
 ;;
 ;; Author: Andrey Listopadov
 ;; Homepage: https://gitlab.com/andreyorst/isayt
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: indent lisp tools
 ;; Prefix: aggressive-indent
+;; Version: 0.0.2
 ;;
 ;; This program is free software: you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -49,8 +50,11 @@ Change info is reported by `after-change-functions' hook."
               (widen)
               (goto-char start)
               (indent-sexp)
-              ;; seccond pass of indent-sexp to fix aligning comments.
-              ;; Not sure why it happens, but one pass is not enough.
+              ;; seccond pass of indent-sexp to fix aligning trailing
+              ;; comments.  Not sure why commends are misaligned,
+              ;; especially because manually calling `indent-sexp'
+              ;; aligns comments correctly, but one pass is not
+              ;; enough in this context.
               (indent-sexp))))))))
 
 ;;;###autoload
