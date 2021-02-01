@@ -47,15 +47,15 @@ Change info is reported by `after-change-functions' hook."
           (save-mark-and-excursion
             (unless (and (nth 3 ppss)
                          (not (nth 4 ppss)))
-              (widen)
-              (goto-char start)
-              (indent-sexp)
-              ;; seccond pass of indent-sexp to fix aligning trailing
-              ;; comments.  Not sure why commends are misaligned,
-              ;; especially because manually calling `indent-sexp'
-              ;; aligns comments correctly, but one pass is not
-              ;; enough in this context.
-              (indent-sexp))))))))
+              (let ((changes (prepare-change-group)))
+                (indent-sexp)
+                ;; seccond pass of indent-sexp to fix aligning trailing
+                ;; comments.  Not sure why commends are misaligned,
+                ;; especially because manually calling `indent-sexp'
+                ;; aligns comments correctly, but one pass is not
+                ;; enough in this context.
+                (indent-sexp)
+                (undo-amalgamate-change-group changes)))))))))
 
 ;;;###autoload
 (define-minor-mode isayt-mode
