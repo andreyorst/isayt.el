@@ -5,7 +5,7 @@
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: indent lisp tools
 ;; Prefix: isayt
-;; Version: 0.0.3
+;; Version: 0.0.4
 ;;
 ;; This program is free software: you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -47,7 +47,8 @@ Change info is reported by `after-change-functions' hook."
           (save-mark-and-excursion
             (unless (and (nth 3 ppss)
                          (not (nth 4 ppss)))
-              (let ((changes (prepare-change-group)))
+              (let ((changes (prepare-change-group))
+                    (inhibit-modification-hooks t))
                 (indent-sexp)
                 ;; seccond pass of indent-sexp to fix aligning trailing
                 ;; comments.  Not sure why commends are misaligned,
