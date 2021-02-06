@@ -2,10 +2,10 @@
 ;;
 ;; Author: Andrey Listopadov
 ;; Homepage: https://gitlab.com/andreyorst/isayt
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: indent lisp tools
 ;; Prefix: isayt
-;; Version: 0.0.4
+;; Version: 0.0.5
 ;;
 ;; This program is free software: you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -28,6 +28,18 @@
 ;;
 ;;; Code:
 
+(defgroup isayt nil
+  "Customization group for isayt."
+  :prefix "isayt-"
+  :group 'electricity
+  :group 'indent)
+
+(defcustom isayt-ignored-commands '(undo undo-tree-undo undo-tree-redo whitespace-cleanup)
+  "Commands after which indentation should not be performed."
+  :type '(repeat symbol)
+  :group 'isayt
+  :package-version '(isayt . "0.0.5"))
+
 (make-variable-buffer-local
  (defvar isayt--last-change nil
    "Position of last text change."))
@@ -38,25 +50,26 @@ Change info is reported by `after-change-functions' hook."
   (setq isayt--last-change start))
 
 (defun isayt--indent-sexp ()
-  "Automatically indent expression."
-  (when-let ((start isayt--last-change))
+  "Automatically indent expression when apropriate."
+  (when isayt--last-change
     (setq isayt--last-change nil)
-    (ignore-errors
-      (let ((ppss (syntax-ppss)))
-        (save-restriction
-          (save-mark-and-excursion
-            (unless (and (nth 3 ppss)
-                         (not (nth 4 ppss)))
-              (let ((changes (prepare-change-group))
-                    (inhibit-modification-hooks t))
-                (indent-sexp)
-                ;; seccond pass of indent-sexp to fix aligning trailing
-                ;; comments.  Not sure why commends are misaligned,
-                ;; especially because manually calling `indent-sexp'
-                ;; aligns comments correctly, but one pass is not
-                ;; enough in this context.
-                (indent-sexp)
-                (undo-amalgamate-change-group changes)))))))))
+    (unless (memq this-command isayt-ignored-commands)
+      (ignore-errors
+        (let ((ppss (syntax-ppss)))
+          (save-restriction
+            (save-mark-and-excursion
+              (unless (and (nth 3 ppss)
+                           (not (nth 4 ppss)))
+                (let ((changes (prepare-change-group))
+                      (inhibit-modification-hooks t))
+                  (indent-sexp)
+                  ;; seccond pass of indent-sexp to fix aligning trailing
+                  ;; comments.  Not sure why commends are misaligned,
+                  ;; especially because manually calling `indent-sexp'
+                  ;; aligns comments correctly, but one pass is not
+                  ;; enough in this context.
+                  (indent-sexp)
+                  (undo-amalgamate-change-group changes))))))))))
 
 ;;;###autoload
 (define-minor-mode isayt-mode
