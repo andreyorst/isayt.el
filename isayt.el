@@ -80,8 +80,8 @@ Automatically indents current expressions when changing text around it."
   :init-value nil
   (if (and isayt-mode
            (not current-prefix-arg))
-      (progn (add-hook 'after-change-functions #'isayt--track-changes nil t)
-             (add-hook 'post-command-hook #'isayt--indent-sexp nil t))
+      (progn (add-hook 'after-change-functions #'isayt--track-changes t t)
+             (add-hook 'post-command-hook #'isayt--indent-sexp t t))
     (remove-hook 'after-change-functions #'isayt--track-changes t)
     (remove-hook 'post-command-hook #'isayt--indent-sexp t)))
 
