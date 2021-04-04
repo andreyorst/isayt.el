@@ -81,7 +81,7 @@ Automatically indents current expressions when changing text around it."
   (if (and isayt-mode
            (not current-prefix-arg))
       (progn (add-hook 'after-change-functions #'isayt--track-changes t t)
-             (add-hook 'post-command-hook #'isayt--indent-sexp t t))
+             (add-hook 'post-command-hook #'isayt--indent-sexp -90 t))
     (remove-hook 'after-change-functions #'isayt--track-changes t)
     (remove-hook 'post-command-hook #'isayt--indent-sexp t)))
 
