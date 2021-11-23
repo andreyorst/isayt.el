@@ -38,11 +38,10 @@
   "Commands after which indentation should not be performed."
   :type '(repeat symbol)
   :group 'isayt
-  :package-version '(isayt . "0.0.5"))
+  :package-version '(isayt . "0.0.6"))
 
-(make-variable-buffer-local
- (defvar isayt--last-change nil
-   "Position of last text change."))
+(defvar-local isayt--last-change nil
+  "Position of last text change.")
 
 (defun isayt--track-changes (start &rest _)
   "Track START of the change.
@@ -50,7 +49,7 @@ Change info is reported by `after-change-functions' hook."
   (setq isayt--last-change start))
 
 (defun isayt--indent-sexp ()
-  "Automatically indent expression when apropriate."
+  "Automatically indent expression when appropriate."
   (when isayt--last-change
     (setq isayt--last-change nil)
     (unless (memq this-command isayt-ignored-commands)
@@ -62,12 +61,6 @@ Change info is reported by `after-change-functions' hook."
                            (not (nth 4 ppss)))
                 (let ((changes (prepare-change-group))
                       (inhibit-modification-hooks t))
-                  (indent-sexp)
-                  ;; seccond pass of indent-sexp to fix aligning trailing
-                  ;; comments.  Not sure why commends are misaligned,
-                  ;; especially because manually calling `indent-sexp'
-                  ;; aligns comments correctly, but one pass is not
-                  ;; enough in this context.
                   (indent-sexp)
                   (undo-amalgamate-change-group changes))))))))))
 
